@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M82 - Molina Interplanetario v2.0</title>
+    <style>
+        :root {
+            --bg-color: #030712;
+            --panel-color: #0f172a;
+            --accent-color: #f97316;
+            --moon-color: #94a3b8;
+            --mars-color: #ef4444;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(249, 115, 22, 0.3);
+        }
+        .grid-logistica {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .card {
+            background: var(--panel-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        .card h3 { margin: 0 0 5px 0; font-size: 0.75rem; color: #cbd5e1; }
+        .card .dato { font-size: 1.1rem; font-weight: bold; color: var(--moon-color); }
+        .console-area {
+            flex: 1;
+            background: #020617;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+        .log { margin: 5px 0; border-left: 3px solid #475569; padding-left: 8px; }
+        .log.launch { border-color: var(--accent-color); }
+        .log.sys { border-color: #3b82f6; }
+        .input-group { display: flex; gap: 8px; }
+        input {
+            flex: 1;
+            background: #090d16;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px;
+            border-radius: 6px;
+        }
+        button {
+            background: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            padding: 0 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>M82-MOLINA: LOGÍSTICA LUNA-MARTE v2.0</h1>
+    </header>
+
+    <div class="grid-logistica">
+        <div class="card">
+            <h3>VELOCIDAD DE ESCAPE LUNAR</h3>
+            <div class="dato">2.38 km/s</div>
+        </div>
+        <div class="card">
+            <h3>ENERGÍA REQUERIDA (Tons)</h3>
+            <div class="dato" id="txt-energia" style="color: var(--mars-color);">0.00 MJ</div>
+        </div>
+    </div>
+
+    <div class="console-area" id="historial">
+        <div class="log sys">[Sistema]: Módulo de Impulsión de Masa Profunda Activo.</div>
+        <div class="log sys">[Info]: Disparando desde la Luna con materiales nativos (cero fricción atmosférica).</div>
+    </div>
+
+    <div class="input-group">
+        <input type="text" id="inputMasa" placeholder="Ej: disparar 500 (toneladas de carga)..." autocomplete="off">
+        <button onclick="calcularDisparo()">DISPARAR</button>
+    </div>
+
+    <script>
+        const historial = document.getElementById('historial');
+
+        function calcularDisparo() {
+            const val = document.getElementById('inputMasa').value.trim();
+            if(!val) return;
+            
+            const partes = val.split(' ');
+            const accion = partes[0].toLowerCase();
+            const toneladas = parseFloat(partes[1]);
+
+            if(accion !== 'disparar' || isNaN(toneladas) || toneladas <= 0) {
+                const div = document.createElement('div');
+                div.className = 'log';
+                div.innerText = '[Error]: Invalido. Usa: "disparar 100"';
+                historial.appendChild(div);
+                return;
+            }
+
+            // Energía cinética simplificada: E = 0.5 * m * v^2 
+            // Velocidad de escape de la luna ~ 2380 m/s
+            const velEscape = 2380;
+            const masaKg = toneladas * 1000;
+            const energiaJulios = 0.5 * masaKg * Math.pow(velEscape, 2);
+            const megajulios = energiaJulios / 1000000;
+
+            // Comparación con la Tierra (Vel escape Tierra ~ 11.2 km/s requiere casi 22 veces más energía por kilo)
+            const energiaTierraMJ = 0.5 * masaKg * Math.pow(11200, 2) / 1000000;
+
+            document.getElementById('txt-energia').innerText = `${megajulios.toLocaleString(undefined, {maximumFractionDigits: 2})} MJ`;
+
+            const div = document.createElement('div');
+            div.className = 'log launch';
+            div.innerText = `[M82-Molina Catapult]:\n -> Carga de ${toneladas} Tons eyectada con éxito hacia Marte.\n -> Energía Lunar: ${megajulios.toFixed(2)} MJ.\n -> Ahorro frente a la Tierra: ¡${(energiaTierraMJ / megajulios).toFixed(1)} veces menos energía requerida!`;
+            
+            historial.appendChild(div);
+            historial.scrollTop = historial.scrollHeight;
+            document.getElementById('inputMasa').value = '';
+        }
+    </script>
+</body>
+</html>
