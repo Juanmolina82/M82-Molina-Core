@@ -3,123 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M82 - Molina Core v2.0</title>
+    <title>Molina Holdings | Platform Hub</title>
     <style>
-        :root {
-            --bg-color: #030712;
-            --panel-color: #0f172a;
-            --accent-color: #38bdf8;
-            --text-color: #f8fafc;
-            --border-color: #1e293b;
-        }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            box-sizing: border-box;
-        }
-        header {
-            text-align: center;
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-        h1 {
-            margin: 0;
-            font-size: 1.1rem;
-            color: var(--accent-color);
-            letter-spacing: 1px;
-        }
-        .console-area {
-            flex: 1;
-            background: #020617;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-        }
-        .log { margin: 5px 0; border-left: 3px solid #475569; padding-left: 8px; white-space: pre-line; }
-        .log.success { border-color: #22c55e; }
-        .log.error { border-color: #ef4444; }
-        .log.sys { border-color: #3b82f6; }
-        .input-group { display: flex; gap: 8px; }
-        input {
-            flex: 1;
-            background: #090d16;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 12px;
-            border-radius: 6px;
-        }
-        button {
-            background: var(--accent-color);
-            color: #0f172a;
-            border: none;
-            padding: 0 15px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        :root { --bg-main: #020617; --bg-panel: #0b1329; --accent: #38bdf8; --accent-gold: #fbbf24; --text-raw: #f8fafc; --border-gate: #1e293b; --indicator-green: #22c55e; }
+        body { background-color: var(--bg-main); color: var(--text-raw); font-family: system-ui, sans-serif; margin: 0; padding: 15px; display: flex; flex-direction: column; height: 100vh; box-sizing: border-box; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-gate); padding-bottom: 10px; margin-bottom: 15px; }
+        .brand h1 { margin: 0; font-size: 1.2rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+        .brand p { margin: 2px 0 0 0; font-size: 0.75rem; color: #64748b; }
+        .status-badge { background: #1e1b4b; border: 1px solid var(--accent-gold); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-family: monospace; color: var(--accent-gold); }
+        .grid-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        .metric-card { background: var(--bg-panel); border: 1px solid var(--border-gate); border-radius: 6px; padding: 10px; }
+        .metric-card h3 { margin: 0 0 3px 0; font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; }
+        .metric-card .value { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+        .console-container { flex: 1; background: #010409; border: 1px solid var(--border-gate); border-radius: 6px; padding: 10px; overflow-y: auto; font-family: monospace; font-size: 0.8rem; margin-bottom: 15px; }
+        .log-entry { margin: 4px 0; padding-left: 8px; border-left: 3px solid #475569; white-space: pre-line; }
+        .log-entry.sys { border-color: var(--accent); color: #38bdf8; }
+        .log-entry.success { border-color: var(--indicator-green); color: #4ade80; }
+        .log-entry.error { border-color: #ef4444; color: #f87171; }
+        .input-bar { display: flex; gap: 8px; }
+        input { flex: 1; background: #090d16; border: 1px solid var(--border-gate); border-radius: 4px; color: var(--text-raw); padding: 12px; font-family: monospace; font-size: 0.85rem; }
+        button { background: var(--accent-gold); color: #020617; border: none; padding: 0 20px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
     </style>
 </head>
 <body>
-
     <header>
-        <h1>M82-MOLINA: CENTRAL CORE v2.0</h1>
+        <div class="brand">
+            <h1>Molina Holdings & Global</h1>
+            <p>Portal Corporativo: www.molina82.com</p>
+        </div>
+        <div class="status-badge">📡 V3.2 SECURED</div>
     </header>
-
-    <div class="console-area" id="historial">
-        <div class="log sys">[Sistema]: Conectado al Cerebro central en Python.</div>
-        <div class="log sys">[Guía]: Comandos válidos:\n - "disparar [toneladas]"\n - "estelar [fracción]"</div>
+    <div class="grid-metrics">
+        <div class="metric-card"><h3>EBITDA Target</h3><div class="value">60% - 70%</div></div>
+        <div class="metric-card"><h3>Asignación</h3><div class="value">$500M USD</div></div>
+        <div class="metric-card"><h3>Hedging</h3><div class="value">≥80% Fixed</div></div>
     </div>
-
-    <div class="input-group">
-        <input type="text" id="inputComando" placeholder="Escribe aquí tu comando..." autocomplete="off">
-        <button onclick="enviarAlCerebro()">ENVIAR</button>
+    <div class="console-container" id="terminal-logs">
+        <div class="log-entry sys">[SYSTEM]: Nodo central www.molina82.com listo en el entorno móvil.</div>
     </div>
-
+    <div class="input-bar">
+        <input type="text" id="terminal-input" placeholder="Comando (scan_mercado, balance_caribe)..." autocomplete="off">
+        <button onclick="procesarComando()">Enviar</button>
+    </div>
     <script>
-        const historial = document.getElementById('historial');
+        const logsContainer = document.getElementById('terminal-logs');
+        async function procesarComando() {
+            const inputElement = document.getElementById('terminal-input');
+            const comandoRaw = inputElement.value.trim();
+            if (!comandoRaw) return;
 
-        async function enviarAlCerebro() {
-            const cmd = document.getElementById('inputComando').value.trim();
-            if(!cmd) return;
+            const userLog = document.createElement('div');
+            userLog.className = 'log-entry';
+            userLog.innerText = `> ${comandoRaw}`;
+            logsContainer.appendChild(userLog);
 
-            // Enviar petición POST a la API de Python
             try {
-                const response = await fetch('/api/calcular', {
+                const respuesta = await fetch('/api/v3/gateway', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ comando: cmd })
+                    body: JSON.stringify({ comando: comandoRaw })
                 });
-                const data = await response.json();
-
-                const div = document.createElement('div');
-                if(data.status === 'success') {
-                    div.className = 'log success';
-                    div.innerText = data.resultado;
+                const data = await respuesta.json();
+                const responseLog = document.createElement('div');
+                if (data.status === 'success') {
+                    responseLog.className = 'log-entry success';
+                    responseLog.innerText = data.data;
                 } else {
-                    div.className = 'log error';
-                    div.innerText = `[Error]: ${data.message}`;
+                    responseLog.className = 'log-entry error';
+                    responseLog.innerText = `[AVISO]: ${data.message}`;
                 }
-                historial.appendChild(div);
-            } catch (err) {
-                const div = document.createElement('div');
-                div.className = 'log error';
-                div.innerText = `[Error de Red]: No se pudo contactar con el Cerebro en Python.`;
-                historial.appendChild(div);
+                logsContainer.appendChild(responseLog);
+            } catch (error) {
+                const errorLog = document.createElement('div');
+                errorLog.className = 'log-entry error';
+                errorLog.innerText = '[ERROR]: Sin conexión con el motor Python.';
+                logsContainer.appendChild(errorLog);
             }
-
-            historial.scrollTop = historial.scrollHeight;
-            document.getElementById('inputComando').value = '';
+            logsContainer.scrollTop = logsContainer.scrollHeight;
+            inputElement.value = '';
         }
     </script>
 </body>
