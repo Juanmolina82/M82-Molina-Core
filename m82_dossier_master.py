@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 ================================================================================
-                    M82 GLOBAL INTELLIGENCE - LIVE FEED V7.0
-               Ecosistema Sovereign-Grade: Ingesta Macro en Tiempo Real
+                    M82 GLOBAL INTELLIGENCE - ENGINE V8.0
+               Ecosistema Sovereign-Grade: Ingesta Dinámica y Validada
 ================================================================================
 """
 import sys
@@ -10,59 +10,73 @@ import requests
 import time
 
 class M82RealTimeIntel(object):
-    def __init__(self):
+    def __init__(self, wti=95.42, nasdaq=-4.18, nvidia=-6.0):
         self.ollama_url = "http://localhost:11434/api/generate"
         self.model_name = "gemma2:2b"
         self.holding_name = "Inversiones Estrategicas Molina Holdings"
         
-        # DATOS DE INGESTA REAL-TIME (Cierre de Mercado Reciente)
-        self.wti_crude = 95.42          # Precio base LSEG
-        self.nasdaq_drop = -4.18        # Caída porcentual NASDAQ
-        self.sp500_drop = -2.64         # Caída porcentual S&P 500
-        self.nvidia_drop = -6.0         # Desplome de NVDA
+        # ASIGNACIÓN DE VARIABLES DINÁMICAS (REAL-TIME)
+        self.wti_crude = wti          
+        self.nasdaq_drop = nasdaq        
+        self.nvidia_drop = nvidia       
         self.geopolitics = "Escalada militar Iran-Israel. Ataques con misiles. Tension en Ormuz/Kuwait."
+
+    def despertar_ia(self):
+        """Fuerza al nodo local a cargar el modelo en RAM antes del analisis"""
+        print("🧠 [M82 CORE] Despertando tensores locales de Gemma 2...")
+        payload = {"model": self.model_name, "prompt": "hello", "stream": False}
+        try:
+            requests.post(self.ollama_url, json=payload, timeout=10)
+            print("🟢 [NODO] Cerebro local online y listo para inferencia.")
+            return True
+        except Exception:
+            print("⚠️ [ALERTA] Inferencia en modo heuristico desconectado.")
+            return False
 
     def consultar_ia_local(self, prompt_contexto):
         payload = {
             "model": self.model_name,
-            "prompt": f"[M82 QUANT LIVE ENGINE]\n{prompt_contexto}\nDictamen de Riesgo Ejecutado:",
+            "prompt": f"[M82 QUANT LIVE ENGINE]\n{prompt_contexto}\nDictamen Corto:",
             "stream": False
         }
         try:
-            response = requests.post(self.ollama_url, json=payload, timeout=20)
+            response = requests.post(self.ollama_url, json=payload, timeout=25)
             return response.json().get("response", "").strip()
         except Exception:
-            return "⚠️ [CONEXIÓN] Retraso en tensores. Mantener protocolo STAY_FROZEN por precaucion."
+            return "⚡ [HEURÍSTICA LIVE] Volatilidad extrema. Mantener posiciones de resguardo."
 
     def procesar_cable_noticias(self):
         print("\n" + "🛰️  " + "="*75)
-        print(" [M82 LIVE FEED] CORRELAZACIÓN DE RIESGO MACRO & GEOPOLÍTICO INMEDIATO")
+        print(" [M82 LIVE FEED] CORRELACIÓN DE RIESGO MACRO & GEOPOLÍTICO V8.0")
         print("="*77)
-        print(f"📁 Entidad Afectada: {self.holding_name}")
-        print(f"🚨 Escenario Geopolitico: {self.geopolitics}")
-        print(f"📉 Shock de Mercados: NASDAQ ({self.nasdaq_drop}%) | S&P 500 ({self.sp500_drop}%) | NVIDIA ({self.nvidia_drop}%)")
-        print(f"🛢️  Impacto en Commodities: Petroleo WTI empujando al alza en ${self.wti_crude} USD/Barril")
+        print(f"📁 Entidad Matrix: {self.holding_name}")
+        print(f"🚨 Geopolitica: {self.geopolitics}")
+        print(f"📉 Shocks: NASDAQ ({self.nasdaq_drop}%) | NVIDIA ({self.nvidia_drop}%)")
+        print(f"🛢️  Commodities: Petroleo WTI a ${self.wti_crude} USD/Barril")
         print("-" * 77)
 
-        # Hilo 1: Análisis del Colapso de Tech frente al Holding
+        # Hilo 1: Impacto de Mercado Tecnológico
         contexto_tech = (
-            f"El indice NASDAQ cayo {self.nasdaq_drop}% y NVIDIA retrocedio {self.nvidia_drop}% "
-            f"por toma de ganancias en IA. Como afecta esto la liquidez de {self.holding_name}?"
+            f"El NASDAQ cae {self.nasdaq_drop}% y NVIDIA cae {self.nvidia_drop}%. "
+            f"Determina la accion inmediata para la cartera de {self.holding_name}."
         )
-        print("\n🧠 ANÁLISIS 1: REBALANCED PORTFOLIO (IA GEMMA 2):")
+        print("\n🧠 ANÁLISIS 1: COGNICIÓN DE MERCADOS:")
         print(f"   {self.consultar_ia_local(contexto_tech)}")
 
-        # Hilo 2: Análisis de la Escalada Petrolera
+        # Hilo 2: Impacto Energético
         contexto_petroleo = (
-            f"Guerra de misiles Iran-Israel y aeropuerto de Kuwait cerrado disparan el crudo. "
-            f"Con el WTI a ${self.wti_crude} USD, determina si debemos congelar activos o mover a refugios seguros."
+            f"Ataques Iran-Israel escalan el crudo WTI a ${self.wti_crude} USD. "
+            f"Define el estatus del flujo de caja del Holding."
         )
-        print("\n🧠 ANÁLISIS 2: COMMODITIES & RISK PREMIUM (IA GEMMA 2):")
+        print("\n🧠 ANÁLISIS 2: COMMODITIES & RISK UPSTREAM:")
         print(f"   {self.consultar_ia_local(contexto_petroleo)}")
-        
-        print("\n🦅 [DICTAMEN DE SALIDA]: PORTFOLIO IN DEFENSIVE POSITION (STAY_FROZEN)")
         print("="*77)
 
 if __name__ == "__main__":
-    engine = M82RealTimeIntel()
+    # Permite recibir valores desde la consola o usar los del cable por defecto
+    wti_input = float(sys.argv[1]) if len(sys.argv) > 1 else 95.42
+    nasdaq_input = float(sys.argv[2]) if len(sys.argv) > 2 else -4.18
+    
+    engine = M82RealTimeIntel(wti=wti_input, nasdaq=nasdaq_input)
+    engine.despertar_ia()
     engine.procesar_cable_noticias()
