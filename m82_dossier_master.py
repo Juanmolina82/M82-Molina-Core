@@ -1,85 +1,91 @@
 # -*- coding: utf-8 -*-
 """
 ================================================================================
-                    M82 GLOBAL INTELLIGENCE - ENGINE V9.0
-             Ecosistema Sovereign-Grade: Misión, Visión e Inteligencia
+         M82 GLOBAL INTELLIGENCE - MASTER ARCHITECTURE V10.0 (FINAL)
+       Sovereign-Grade Governance: Molina Holdings LLC & Global GP
 ================================================================================
 """
 import sys
 import requests
 import time
 
-class M82SovereignCore(object):
-    def __init__(self, wti=95.42, nasdaq=-4.18, nvidia=-6.0):
+class M82MasterArchitecture(object):
+    def __init__(self):
         self.ollama_url = "http://localhost:11434/api/generate"
         self.model_name = "gemma2:2b"
-        self.holding_name = "Inversiones Estrategicas Molina Holdings"
         
-        # FILOSOFÍA CORPORATIVA SOBERANA
-        self.mision = "Garantizar la autonomía analítica, la resiliencia operativa y la absoluta privacidad de los flujos financieros y estratégicos del Holding, procesando inteligencia global localmente y sin dependencia de infraestructuras centralizadas externas."
-        self.vision = "Consolidar el ecosistema M82 Molina-Core como un búnker tecnológico auto-sustentable de Grado Soberano para el año 2027, capaz de predecir fluctuaciones macroeconómicas y gestionar activos mediante agentes cognitivos 100% desconectados."
+        # 1. INSTITUTIONAL PROPERTIES & ENTITIES
+        self.parent_company = "Molina Holdings LLC (Tennessee) [IP Owner]"
+        self.gp_company = "Molina Global LLC (Delaware) [Global GP]"
+        self.auditor = "Deloitte Nashville / Global (US GAAP / IFRS)"
+        
+        # 2. FINANCIAL & CAPITAL ENGINEERING PARAMS (V3.2)
+        self.leverage_ratio = "3.5x - 4.5x Debt/EBITDA"
+        self.hedging_pct = ">=80% Fixed-Rate Debt"
+        self.ebitda_margin = "60% - 70% (Midstream & Energy)"
+        self.ffo_target = "~42% on Revenue"
+        self.preferred_return = "8% Compounded (European Waterfall)"
+        self.initial_protocol = "USD 500 Million"
+        self.market_firepower = "USD 2B - 5B (Co-Investment Side-Cars)"
+        self.production_context = "1.23M bpd production boom"
 
-        # ASIGNACIÓN DE VARIABLES
-        self.wti_crude = wti          
-        self.nasdaq_drop = nasdaq        
-        self.nvidia_drop = nvidia       
-        self.geopolitics = "Escalada militar Iran-Israel (Ataques de misiles). Shock tecnologico en Wall Street."
+        # 3. CRYPTOGRAPHIC GITHUB REPOSITORY CORES
+        self.repositories = [
+            "MOLINA-GLOBAL-CORE-V6", "m82-macro-intelligence", "M82-Governance-Master1",
+            "M82-Molina-Core", "M82-Sovereign-Core", "MOLINA---IA-Plataform",
+            "M82-Command", "M82-Sovereign-Core1", "JM82", "pplx-kernels", "Molina---IA-Plataforma"
+        ]
 
-    def desplegar_manifiesto(self):
-        """Imprime la identidad institucional del holding en la consola corporativa"""
-        print("\n" + "🏛️  " + "="*75)
-        print("                 M82 MOLINA-CORE - MANIFIESTO INSTITUCIONAL")
-        print("="*79)
-        print(f"🎯 MISIÓN SOBERANA:\n   '{self.mision}'")
-        print(f"\n🔮 VISIÓN ESTRATÉGICA (Hacia 2027):\n   '{self.vision}'")
-        print("="*79)
-        time.sleep(1)
+        # 4. ADOBE ACROBAT SECURE VAULT URNS
+        self.adobe_urns = [
+            "urn:aaid:sc:VA6C2:fa802e30-d817-4c5a-b723-6bbb3590b474",
+            "urn:aaid:sc:VA6C2:92449dd6-9289-455d-ba3a-4486cc0b7cc4",
+            "urn:aaid:sc:VA6C2:56b440ad-18f2-43bc-8f62-3906353db07e",
+            "urn:aaid:sc:VA6C2:c1f77426-f3f6-4475-bd44-88c61cbc8820",
+            "urn:aaid:sc:VA6C2:79514626-17b8-470a-b902-d2d5c2f83abf",
+            "urn:aaid:sc:VA6C2:f3f73f08-eaaf-48ac-8bd0-5534ea66bd44",
+            "urn:aaid:sc:VA6C2:fa93ff07-2148-4a21-b900-070bcfaa6433",
+            "urn:aaid:sc:VA6C2:f45497a1-0ec3-4df2-9058-be4a69e4ee7a"
+        ]
 
-    def despertar_ia(self):
-        print("🧠 [M82 CORE] Inicializando modelo local Gemma 2 según directivas del Manifiesto...")
-        payload = {"model": self.model_name, "prompt": "init", "stream": False}
-        try:
-            requests.post(self.ollama_url, json=payload, timeout=10)
-            print("🟢 [NODO COGNITIVO] Alineado con la Misión del Holding. Online.")
-            return True
-        except Exception:
-            print("⚠️ [CONTINGENCIA] Ejecutando bajo protocolos heurísticos defensivos.")
-            return False
+    def desplegar_cabecera_gobierno(self):
+        print("\n" + "👑 " + "="*75)
+        print("          MOLINA HOLDINGS & GLOBAL LLC — AUDITORÍA DE ARQUITECTURA")
+        print("="*77)
+        print(f"🏛️  Matriz Jurídica : {self.parent_company} | {self.gp_company}")
+        print(f"📊 Protocolo Base  : {self.initial_protocol} | Escala: {self.market_firepower}")
+        print(f"🔒 Blindaje Legal  : Delaware/Tennessee Jurisdiction - U.S. Federal & UK Law")
+        print(f"📂 Repositorios    : {len(self.repositories)} Núcleos de Código Sincronizados")
+        print(f"📄 Bóvedas PDF URN : {len(self.adobe_urns)} Documentos de Inversión Enlazados")
+        print("-" * 77)
 
-    def consultar_ia_local(self, prompt_contexto):
+    def consultar_gemma(self, prompt):
         payload = {
             "model": self.model_name,
-            "prompt": f"[M82 MANIFESTO ALIGNED ENGINE]\nDirectiva: {self.mision}\nContexto actual: {prompt_contexto}\nDictamen Soberano:",
+            "prompt": f"[M82 QUANT GOVERNANCE CORE]\nContexto:\n{prompt}\nDictamen Táctico:",
             "stream": False
         }
         try:
             response = requests.post(self.ollama_url, json=payload, timeout=25)
             return response.json().get("response", "").strip()
         except Exception:
-            return "⚡ [HEURÍSTICA CORE] Volatilidad extrema. Custodia de capitales activa."
+            return "⚡ [MODO HEURÍSTICO] Cobertura activa. Mantener estructura de apalancamiento 3.5x."
 
-    def procesar_operaciones(self):
-        print("\n" + "🛰️  " + "="*75)
-        print(" [M82 LIVE FEED] CORRELACIÓN BAJO PRINCIPIOS DE GOBERNANZA V9.0")
-        print("="*77)
-        print(f"📁 Entidad Operadora: {self.holding_name}")
-        print(f"📉 Variables: NASDAQ ({self.nasdaq_drop}%) | NVIDIA ({self.nvidia_drop}%) | WTI (${self.wti_crude} USD)")
-        print("-" * 77)
-
-        # Análisis Guiado por la Misión
+    def auditar_metricas_financieras(self):
+        print("\n📈 [ANÁLISIS DE DISCIPLINA DE CAPITAL & COBERTURA MACRO]")
+        print(f"   - Estructura de Deuda: {self.leverage_ratio} | Cobertura: {self.hedging_pct}")
+        print(f"   - Retorno Preferente : {self.preferred_return} | Margen EBITDA: {self.ebitda_margin}")
+        
         contexto = (
-            f"Bajo nuestra Mision de autonomia, evalua la toma de ganancias de NVIDIA ({self.nvidia_drop}%) "
-            f"y los misiles en Medio Oriente. ¿Como debe actuar el fondo defensivo de Molina Holdings?"
+            f"Evalúa la viabilidad de un despliegue de capital de {self.initial_protocol} "
+            f"escalable a {self.market_firepower} orientado a capturar el boom de {self.production_context} "
+            f"con un margen EBITDA del {self.ebitda_margin} y auditoría de {self.auditor}."
         )
-        print("\n🧠 DICTAMEN INTEGRADO DE INTELIGENCIA DE MERCADOS:")
-        print(f"   {self.consultar_ia_local(contexto)}")
+        print("\n🧠 DICTAMEN DE INVERSIÓN COGNITIVO (IA GEMMA 2):")
+        print(f"   {self.consultar_gemma(contexto)}")
         print("="*77)
 
 if __name__ == "__main__":
-    wti_param = float(sys.argv[1]) if len(sys.argv) > 1 else 95.42
-    nasdaq_param = float(sys.argv[2]) if len(sys.argv) > 2 else -4.18
-    
-    core = M82SovereignCore(wti=wti_param, nasdaq=nasdaq_param)
-    core.desplegar_manifiesto()
-    core.despertar_ia()
-    core.procesar_operaciones()
+    core = M82MasterArchitecture()
+    core.desplegar_cabecera_gobierno()
+    core.auditar_metricas_financieras()
