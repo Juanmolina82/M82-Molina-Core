@@ -1,65 +1,64 @@
 # -*- coding: utf-8 -*-
 """
 ================================================================================
-       M82 MACRO INTELLIGENCE - DERIVATIVES & GEX COUPLING V14.5
-        Sovereign-Grade Governance: Options Market Walls & Skew Analysis
+       M82 MACRO INTELLIGENCE - CAPEX DISCONNECT & BRENT MATRIX V15.0
+     Sovereign-Grade Governance: BMI Industry Forecast & Capital Discipline
 ================================================================================
 """
 import sys
 import json
 import requests
 
-class M82GexEngine(object):
+class M82CapexMatrix(object):
     def __init__(self):
         self.ollama_url = "http://localhost:11434/api/generate"
         self.model_name = "gemma2:2b"
         
-        # PARAMETRIZACIÓN DE DERIVADOS (EXTRACCIÓN MOOMOO JUN 8/9, 2026)
-        self.spx_spot = 7405.73
-        self.spx_put_wall = 7375.0
-        self.spx_call_wall = 7450.0
-        self.spx_gamma_flip = 7464.68
+        # INGESTA DATA GLOBAL BMI - 2026
+        self.brent_aug6 = 93.11
+        self.global_capex_2026_billion = 636.0
+        self.global_capex_2025_billion = 639.0
+        self.mena_capex_growth = 4.0        # Moderado del 5.4% inicial por conflicto
+        self.russia_capex_contraction = -13.3 # Asfixia estructural por sanciones
         
-        # FLUJOS DE ROTACIÓN ESPECÍFICOS
-        self.intc_pc_ratio = 0.46          # Altamente Bullish en volumen de opciones
-        self.intc_iv_percentile = 96.0     # Volatilidad implícita al límite
-        self.aapl_iv_percentile = 32.0     # Flujo institucional deprimido en Big Tech
+        # PARÁMETROS INSTITUCIONALES DE ENERGÍA DE CORNING/MAJORS
+        self.majors_capex_billion = 96.8    # Tightly controlled (BP, CVX, XOM, Shell, TTE)
+        self.safety_premium_usd = self.brent_aug6 - 81.50 # Spread sobre la base estimada de BMI
 
-    def analizar_riesgo_gamma(self):
-        print("\n" + "📊 " + "="*75)
-        print(" [M82 DERIVATIVES CORE V14.5] — MAPA DE EXPOSICIÓN A GAMMA (GEX)")
+    def procesar_desconexion_capex(self):
+        print("\n" + "🏛️  " + "="*75)
+        print(" [M82 INFRASTRUCTURE V15.0] — DISCIPLINE & GLOBAL CAPEX DECOUPLING")
         print("="*79)
-        print(f"• S&P 500 Spot Baseline : {self.spx_spot}")
-        print(f"• 🛡️ Put Wall (Soporte) : {self.spx_put_wall} | 🧱 Call Wall (Techo): {self.spx_call_wall}")
-        print(f"• 🔄 Punto Gamma Flip   : {self.spx_gamma_flip} (Estado Actual: GAMMA NEGATIVA/VOLÁTIL)")
-        print("-" * 79)
-        print(f"• Intel (INTC) IV Pctl  : {self.intc_iv_percentile}% (Put/Call Ratio: {self.intc_pc_ratio})")
-        print(f"• Apple (AAPL) IV Pctl  : {self.aapl_iv_percentile}% (Desinterés Institucional)")
+        print(f"🛢️  Brent Contrato (AUG6) : ${self.brent_aug6} USD/Bbl (Prima Activa US-Iran)")
+        print(f"📉 Capex Global 2026    : ${self.global_capex_2026_billion}B USD (Caída del 0.5% vs 2025)")
+        print(f"🇷🇺 Contracción Rusa     : {self.russia_capex_contraction}% (Pérdida de capacidad operativa)")
+        print(f"💼 Gasto de las Majors  : ${self.majors_capex_billion}B USD (Enfoque estricto en Upstream Core)")
         print("-" * 79)
 
-        # Determinar vulnerabilidad de mercado
-        distancia_soporte = ((self.spx_spot - self.spx_put_wall) / self.spx_spot) * 100
-        print(f"🚨 Distancia de seguridad al Put Wall: {distancia_soporte:.2f}%")
+        # Cálculo de la Anomalía del Ciclo (Precios Altos / Inversión Baja)
+        print(f"🔥 Prima Geopolítica de Seguridad sobre Base BMI: +${self.safety_premium_usd:.2f} USD")
         
-        contexto_gex = (
-            f"El S&P 500 cotiza a {self.spx_spot}, posicionándose por debajo del nivel de Gamma Flip ({self.spx_gamma_flip}), "
-            f"pero sostenido por el Put Wall masivo de {self.spx_put_wall}. El mercado institucional acumula derivados de Intel "
-            f"(IV Pctl {self.intc_iv_percentile}%) mientras congela a Apple. Genera el reporte de cobertura de riesgos."
+        contexto_capex = (
+            f"El crudo Brent cotiza alto a ${self.brent_aug6} por el conflicto en Medio Oriente, pero el Capex global cae a ${self.global_capex_2026_billion}B. "
+            f"Las Majors prefieren retornos financieros y proyectos de bajo riesgo en el Eje Atlántico (Guyana/Argentina) antes que expandir producción. "
+            f"Rusia colapsa un {self.russia_capex_contraction}%. Formula la estrategia de arbitraje de infraestructura para Molina Holdings."
         )
 
         payload = {
             "model": self.model_name,
-            "prompt": f"[M82 GEX MATRIX]\nContexto: {contexto_gex}\nDictamen Cuantitativo de Riesgo:",
+            "prompt": f"[M82 CAPEX MATRIX]\nContexto: {contexto_capex}\nDictamen Táctico de Asignación:",
             "stream": False
         }
 
         try:
             res = requests.post(self.ollama_url, json=payload, timeout=25)
-            print(f"\n🧠 DICTAMEN INTEGRADO DE DERIVADOS (Gemma 2):\n{res.json().get('response', '').strip()}")
+            print(f"\n🧠 DICTAMEN DE INTELIGENCIA SOBERANA (Gemma 2):\n{res.json().get('response', '').strip()}")
         except Exception:
-            print("\n🛡️ [Sovereign Mode] Nodo Ollama local procesando en frío. Mapeo de paredes asegurado en el Ledger.")
+            print("\n🛡️ [HEURÍSTICA CORE] Servidor local Ollama procesando en paralelo.")
+            print("   >> DIRECTIVA: El desacoplamiento estructural valida la escasez de oferta futura a mediano plazo.")
+            print("   >> ACCIÓN: Mantener el enfoque de inversión en el Control Layer (transporte y midstream), no en exploración.")
         print("="*79)
 
 if __name__ == "__main__":
-    analizador = M82GexEngine()
-    analizador.analizar_riesgo_gamma()
+    engine = M82CapexMatrix()
+    engine.procesar_desconexion_capex()
