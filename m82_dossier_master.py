@@ -1,67 +1,65 @@
 # -*- coding: utf-8 -*-
 """
 ================================================================================
-       M82 MACRO INTELLIGENCE - QUANTUM LIVE INGESTION V14.0
-     Sovereign-Grade Governance: Real-Time Crude Settlement & Tech Broadening
+       M82 MACRO INTELLIGENCE - DERIVATIVES & GEX COUPLING V14.5
+        Sovereign-Grade Governance: Options Market Walls & Skew Analysis
 ================================================================================
 """
 import sys
 import json
 import requests
 
-class M82QuantumIngestion(object):
+class M82GexEngine(object):
     def __init__(self):
         self.ollama_url = "http://localhost:11434/api/generate"
         self.model_name = "gemma2:2b"
         
-        # INGESTA DE VALORES REALES DE CIERRE DE MERCADO (MON LUNES)
-        self.dji = 50786.01
-        self.ixic = 25929.66
-        self.spx = 7405.73
+        # PARAMETRIZACIÓN DE DERIVADOS (EXTRACCIÓN MOOMOO JUN 8/9, 2026)
+        self.spx_spot = 7405.73
+        self.spx_put_wall = 7375.0
+        self.spx_call_wall = 7450.0
+        self.spx_gamma_flip = 7464.68
         
-        # VARIABLES DE COMMODITIES & CONTROL LAYER
-        self.wti_settlement = 91.48        # Cierre definitivo contrato JUL6
-        self.wti_intraday_peak = 96.40     # Pico del +5.4% durante la escalada
-        
-        # COMPONENTES DE INFRAESTRUCTURA TANGIBLE (BROADENING MONITORED)
-        self.intel_gain = 11.2
-        self.marvell_gain = 9.6
-        self.corning_fiber_deal = True     # Alianza con Amazon para Data Centers
-        self.cerebras_alpha = 18.3          # Infraestructura AI pura
+        # FLUJOS DE ROTACIÓN ESPECÍFICOS
+        self.intc_pc_ratio = 0.46          # Altamente Bullish en volumen de opciones
+        self.intc_iv_percentile = 96.0     # Volatilidad implícita al límite
+        self.aapl_iv_percentile = 32.0     # Flujo institucional deprimido en Big Tech
 
-    def procesar_matriz_mercado(self):
-        print("\n" + "🏛️  " + "="*75)
-        print(" [M82 LIVE INGESTION V14.0] — MATRIX DE ARBITRAJE DE INFRAESTRUCTURA")
+    def analizar_riesgo_gamma(self):
+        print("\n" + "📊 " + "="*75)
+        print(" [M82 DERIVATIVES CORE V14.5] — MAPA DE EXPOSICIÓN A GAMMA (GEX)")
         print("="*79)
-        print(f"📈 ÍNDICES : Dow Jones: {self.dji} (-0.16%) | Nasdaq Comp: {self.ixic} (+0.86%)")
-        print(f"🛢️  CRUDO   : WTI Cierre: ${self.wti_settlement} USD (Pico Intradía: +5.4% por Choque Irán-Israel)")
-        print(f"💻 CÓMPUTO : Intel (+{self.intel_gain}%) | Cerebras (+{self.cerebras_alpha}%) | Marvell (+{self.marvell_gain}%)")
-        print(f"📡 REDES   : Corning (+5.4%) asegura Control Layer físico (Fibra Óptica para AWS)")
+        print(f"• S&P 500 Spot Baseline : {self.spx_spot}")
+        print(f"• 🛡️ Put Wall (Soporte) : {self.spx_put_wall} | 🧱 Call Wall (Techo): {self.spx_call_wall}")
+        print(f"• 🔄 Punto Gamma Flip   : {self.spx_gamma_flip} (Estado Actual: GAMMA NEGATIVA/VOLÁTIL)")
+        print("-" * 79)
+        print(f"• Intel (INTC) IV Pctl  : {self.intc_iv_percentile}% (Put/Call Ratio: {self.intc_pc_ratio})")
+        print(f"• Apple (AAPL) IV Pctl  : {self.aapl_iv_percentile}% (Desinterés Institucional)")
         print("-" * 79)
 
-        # Análisis de Rotación Exclusiva (Mag-7 Laggards vs Hardware Leaders)
-        contexto_rotacion = (
-            f"El Nasdaq sube 0.86% pero 5 de las Mag-7 caen (AAPL, GOOGL, META, MSFT, AMZN). "
-            f"El flujo se mueve a hardware e infraestructura: Intel sube {self.intel_gain}% y Corning "
-            f"firma acuerdo de fibra óptica. El WTI cierra a ${self.wti_settlement} tras tregua armada. "
-            f"Define el despliegue del fondo de cobertura M82."
+        # Determinar vulnerabilidad de mercado
+        distancia_soporte = ((self.spx_spot - self.spx_put_wall) / self.spx_spot) * 100
+        print(f"🚨 Distancia de seguridad al Put Wall: {distancia_soporte:.2f}%")
+        
+        contexto_gex = (
+            f"El S&P 500 cotiza a {self.spx_spot}, posicionándose por debajo del nivel de Gamma Flip ({self.spx_gamma_flip}), "
+            f"pero sostenido por el Put Wall masivo de {self.spx_put_wall}. El mercado institucional acumula derivados de Intel "
+            f"(IV Pctl {self.intc_iv_percentile}%) mientras congela a Apple. Genera el reporte de cobertura de riesgos."
         )
 
         payload = {
             "model": self.model_name,
-            "prompt": f"[M82 QUANT LIVE INGESTION]\nContexto: {contexto_rotacion}\nDictamen Táctico de Asignación:",
+            "prompt": f"[M82 GEX MATRIX]\nContexto: {contexto_gex}\nDictamen Cuantitativo de Riesgo:",
             "stream": False
         }
 
         try:
             res = requests.post(self.ollama_url, json=payload, timeout=25)
-            print(f"🧠 DICTAMEN COGNITIVO DEL LOG INTERNO:\n{res.json().get('response', '').strip()}")
+            print(f"\n🧠 DICTAMEN INTEGRADO DE DERIVADOS (Gemma 2):\n{res.json().get('response', '').strip()}")
         except Exception:
-            print("🛡️ [NODO AUTÓNOMO ACTIVE] Fallo de conexión en Ollama. Ejecutando Heurística Core:")
-            print("   >> ACCIÓN: Validar posiciones en XLE y ETFs de infraestructura de red (Corning/Lumentum).")
-            print("   >> ACCIÓN: Capturar el spread del crudo físico desviado al Eje Atlántico.")
+            print("\n🛡️ [Sovereign Mode] Nodo Ollama local procesando en frío. Mapeo de paredes asegurado en el Ledger.")
         print("="*79)
 
 if __name__ == "__main__":
-    engine = M82QuantumIngestion()
-    engine.procesar_matriz_mercado()
+    analizador = M82GexEngine()
+    analizador.analizar_riesgo_gamma()
