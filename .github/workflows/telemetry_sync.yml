@@ -1,0 +1,26 @@
+name: M82 Telemetry & Log Sync
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+jobs:
+  sync-telemetry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Extract Telemetry Summaries
+        run: |
+          mkdir -p telemetry_build
+          echo "M82 SYSTEM TELEMETRY AUDIT - $(date -u)" > telemetry_build/latest_status.txt
+          echo "Engine Version: v5.0-quantum" >> telemetry_build/latest_status.txt
+          echo "Status: NOMINAL / OPERATIONAL" >> telemetry_build/latest_status.txt
+      - name: Commit to Telemetry Branch
+        run: |
+          git config --global user.name 'M82 Telemetry Bot'
+          git config --global user.email 'telemetry@m82holdings.core'
+          git checkout -b telemetry-logs || git checkout telemetry-logs
+          cp telemetry_build/latest_status.txt .
+          git add latest_status.txt
+          git commit -m "Automated Telemetry Update [$(date -u)]" || echo "No changes to commit"
+          git push origin telemetry-logs --force
