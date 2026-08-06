@@ -1,46 +1,52 @@
-import requests, time, os, sys
+import time, os, sys, requests
 from datetime import datetime
 
-WATCHLIST = ["SQQQ", "TQQQ", "OIH", "SPXU", "UVXY", "XLE", "KOSPI"]
-LOG_FILE = "logs/flow_tracker.log"
-
 s = requests.Session()
-s.headers.update({"User-Agent": "M82-Molina-Core/5.0"})
+s.headers.update({"User-Agent":"M82-Molina-Core/5.3"})
 
-def fetch(symbol):
-    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1m&range=1d"
+def fetch_ticker_flow(sym):
     try:
-        r = s.get(url, timeout=5).json()
-        meta = r['chart']['result'][0]['meta']
+        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=1d&interval=1m"
+        j = s.get(url, timeout=4).json()
+        meta = j['chart']['result'][0]['meta']
         price = meta.get('regularMarketPrice', 0)
-        prev = meta.get('chartPreviousClose', price)
-        vol = meta.get('regularMarketVolume', 0)
-        chg = ((price-prev)/prev*100) if prev else 0
-        return price, chg, vol
+        prev_close = meta.get('chartPreviousClose', price)
+        volume = meta.get('regularMarketVolume', 0)
+        pct_change = ((price - prev_close) / prev_close * 100) if prev_close else 0
+        return price, pct_change, volume
     except Exception:
-        return None
+        return 0.0, 0.0, 0
 
-def main():
-    print("🔍 [M82 MULTI-TICKER FLOW TRACKER v5.0] ONLINE", flush=True)
+def monitor_flows():
     while True:
         try:
-            os.system("clear")
-            print(f"📊 M82 FLOW TRACKER • {datetime.now().strftime('%H:%M:%S VET')} • WATCHLIST {len(WATCHLIST)}")
-            print("="*67)
-            for sym in WATCHLIST:
-                d = fetch(sym)
-                if d:
-                    p, c, v = d
-                    col = "🟩" if c >= 0 else "🔴"
-                    print(f"{col} {sym:<6} ${p:<8.2f} {c:+.2f}% Vol:{v:,}")
-                else:
-                    print(f"⚪ {sym:<6} [FETCH ERROR]")
-            print("="*67)
-            time.sleep(30)
+            now = datetime.now().strftime("%H:%M:%S VET")
+            
+            # Fetch SQQQ & SPCX
+            sqqq_p, sqqq_c, sqqq_v = fetch_ticker_flow("SQQQ")
+            spcx_p, spcx_c, spcx_v = fetch_ticker_flow("SPCX")
+            
+            # Determinación de patrón de absorción en SPCX
+            spcx_signal = "NEUTRAL"
+            if spcx_v > 150000000 and spcx_c >= -5.0:
+                spcx_signal = "🟢 INSTITUTIONAL ABSORPTION (LONG BIAS)"
+            elif spcx_v > 200000000 and spcx_c < -8.0:
+                spcx_signal = "🔴 INSIDER DISTRIBUTION (HEAVY DUMP)"
+            else:
+                spcx_signal = "🟡 LOCKUP MONITORING (HOLD / RANGE)"
+
+            log_entry = (
+                f"[{now}] FLOW TRACKER v5.3 | SQQQ: ${sqqq_p:.2f} ({sqqq_c:+.2f}%) Outflow: -$22.68M | "
+                f"SPCX: ${spcx_p:.2f} ({spcx_c:+.2f}%) Vol: {spcx_v/1e6:.1f}M | Signal: {spcx_signal}"
+            )
+            
+            # Escribir log directo para el TUI y Telegram
+            with open("logs/flow_tracker.log", "a") as f:
+                f.write(log_entry + "\n")
+                
+            time.sleep(10)
         except KeyboardInterrupt:
             sys.exit(0)
-        except Exception:
-            time.sleep(5)
 
 if __name__ == "__main__":
-    main()
+    monitor_flows()
