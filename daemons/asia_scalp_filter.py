@@ -1,90 +1,73 @@
 import requests, time, os, sys
-from m82_config import CONFIG
-from m82_quantum_agi_core import run_quantum_pipeline
 
+# Credenciales de Telegram
 TOKEN = os.environ.get("BOT_TOKEN")
 CHAT = os.environ.get("CHAT_ID")
-TOKEN_V2 = os.environ.get("BOT_TOKEN_V2")
-VIP_CHAT = os.environ.get("VIP_BROADCAST_CHAT_ID")
-
-if not TOKEN or not CHAT:
-    print("❌ ERROR: Variables BOT_TOKEN o CHAT_ID no detectadas.", flush=True)
-    sys.exit(1)
 
 s = requests.Session()
 s.headers.update({"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
 
-NQ_TICKER = "NQ=F"
-GC_TICKER = "GC=F"
+# Umbrales Institucionales
+NQ_HARD_FLOOR = 29500.0
+DXY_INTERLOCK_LIMIT = 100.20
+KOSPI_BREAKOUT = 6350.0
 
-def send_telegram_msg(token, chat_id, text):
-    if not token or not chat_id:
+def fetch_ticker(symbol):
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1m&range=1d"
+    try:
+        r = s.get(url, timeout=5).json()
+        meta = r['chart']['result'][0]['meta']
+        return meta.get('regularMarketPrice', 0.0)
+    except Exception:
+        return 0.0
+
+def send_alert(msg):
+    if not TOKEN or not CHAT:
         return
+    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     try:
-        url = f"https://api.telegram.org/bot{token}/sendMessage"
-        requests.post(url, json={"chat_id": chat_id, "text": text, "parse_mode": "Markdown"}, timeout=4)
+        s.post(url, json={"chat_id": CHAT, "text": msg, "parse_mode": "Markdown"}, timeout=4)
     except Exception as e:
-        print(f"Error sending message: {e}", flush=True)
+        print(f"Error TG: {e}", flush=True)
 
-def send_voice_alert(text_summary, state, confidence):
-    target_token = TOKEN_V2 if TOKEN_V2 else TOKEN
-    target_chat = VIP_CHAT if VIP_CHAT else CHAT
-    
-    voice_msg = (
-        f"🎙️ *[M82 REAL-TIME VOICE TRANSMISSION]*\n\n"
-        f"⚛️ *Estado Cuántico:* `{state}`\n"
-        f"🧠 *Confianza AGI:* `{confidence:.1f}%`\n"
-        f"📊 *Detalle:* {text_summary}"
-    )
-    send_telegram_msg(target_token, target_chat, voice_msg)
-
-def get_telemetry():
-    try:
-        url_nq = f"https://query1.finance.yahoo.com/v8/finance/chart/{NQ_TICKER}?interval=1m&range=1d&includePrePost=true"
-        j_nq = s.get(url_nq, timeout=4).json()
-        closes_nq = [float(x) for x in j_nq['chart']['result'][0]['indicators']['quote'][0]['close'] if isinstance(x, (int, float)) and x > 0]
-        vols_nq = [float(x) for x in j_nq['chart']['result'][0]['indicators']['quote'][0]['volume'] if isinstance(x, (int, float))]
-        
-        url_gc = f"https://query1.finance.yahoo.com/v8/finance/chart/{GC_TICKER}?interval=1m&range=1d&includePrePost=true"
-        j_gc = s.get(url_gc, timeout=3).json()
-        closes_gc = [float(x) for x in j_gc['chart']['result'][0]['indicators']['quote'][0]['close'] if isinstance(x, (int, float)) and x > 0]
-
-        if len(vols_nq) < 20 or len(closes_nq) < 3 or len(closes_gc) < 4:
-            return None
-
-        current_nq = closes_nq[-1]
-        avg_vol = sum(vols_nq[-20:-3]) / 17.0 if vols_nq[-20:-3] else 1.0
-        ratio_nq = sum(vols_nq[-3:]) / (avg_vol * 3.0) if avg_vol > 0 else 0.0
-        gc_mom = ((closes_gc[-1] - closes_gc[-4]) / closes_gc[-4]) * 100.0
-
-        return current_nq, ratio_nq, gc_mom
-    except Exception as e:
-        print(f"Error fetching telemetry: {e}", flush=True)
-        return None
-
-print("⚛️ M82 QUANTUM-AGI REALTIME DAEMON ONLINE — Monitoreo continuo activo...", flush=True)
-
-last_state = "SUPERPOSITION_HOLD"
+print("🌙 [ASIA STANDBY DAEMON v2.5.1] ACTIVATED...", flush=True)
 
 while True:
-    data = get_telemetry()
-    if data:
-        nq_price, ratio, gc_mom = data
-        q_res = run_quantum_pipeline(nq_price, CONFIG["NQ_DYNAMIC_SUPPORT"], ratio, gc_mom)
-        current_state = q_res['state']
-        confidence = q_res['confidence']
-        
-        # Log local en pantalla
-        print(
-            f"[{time.strftime('%H:%M:%S')}] NQ: {nq_price:.2f} | Vol: {ratio:.2f}x | GC: {gc_mom:+.2f}% | "
-            f"State: {current_state} (|BULL>: {q_res['prob_bull']:.1f}%) | AGI: {confidence:.1f}",
-            flush=True
-        )
+    nq_price = fetch_ticker("NQ=F")
+    dxy_price = fetch_ticker("DX-Y.NYB")
+    vix_price = fetch_ticker("^VIX")
 
-        # Transmisión en tiempo real ante cambio de estado o señal fuerte
-        if current_state != last_state and current_state != "SUPERPOSITION_HOLD":
-            summary = f"NQ a {nq_price:.2f} (Vol {ratio:.2f}x, GC Mom {gc_mom:+.2f}%)."
-            send_voice_alert(summary, current_state, confidence)
-            last_state = current_state
+    timestamp = time.strftime('%H:%M:%S VET')
+    
+    # Evaluar Interlocks y Condiciones de Intervención
+    dxy_freeze = dxy_price >= DXY_INTERLOCK_LIMIT
+    floor_breach = nq_price < NQ_HARD_FLOOR
+    
+    state = "SUPERPOSITION_HOLD"
+    confidence = 58
+    action = "STANDBY (NO ENTRY)"
 
-    time.sleep(15)
+    if dxy_freeze:
+        state = "HARD_FREEZE_LONG"
+        action = "🚨 DXY INTERLOCK TRIGGERED (DXY >= 100.20) - LONGS FROZEN"
+        confidence = 0
+    elif dxy_price < 99.90 and nq_price > NQ_HARD_FLOOR:
+        state = "BULL_ACCUMULATION"
+        action = "EXECUTE SCALP LONG"
+        confidence = 72
+
+    output = (
+        f"[{timestamp}] 🌙 ASIA MONITOR | NQ: ${nq_price:.2f} | DXY: {dxy_price:.2f} | VIX: {vix_price:.2f}\n"
+        f"├─ State: {state} (Confidence: {confidence}/100)\n"
+        f"├─ Action: {action}\n"
+        f"└─ Hard Floor Support: ${NQ_HARD_FLOOR:.2f} | DXY Max: {DXY_INTERLOCK_LIMIT}"
+    )
+
+    print(output, flush=True)
+
+    # Si hay un Freeze o una condición crítica, notifica a Telegram
+    if dxy_freeze:
+        send_alert(f"🚨 *[M82 RISK WARDEN]* DXY rompió el umbral `{dxy_price:.2f}` (Limit: `{DXY_INTERLOCK_LIMIT}`). *Longs congelados en sesión Asia.*")
+
+    # Refresh interval de 300 segundos (5 min) para Asia Standby
+    time.sleep(300)
