@@ -7,7 +7,8 @@ WATCH = {
   "SOUN":"SOUN", "ELF":"ELF", "ARM":"ARM", "AMD":"AMD", "XLE":"XLE",
   "PLTR":"PLTR", "TSLA":"TSLA", "SMCI":"SMCI", "AVGO":"AVGO", "AMZN":"AMZN",
   "FIG":"FIG", "AXON":"AXON", "KOSPI":"^KS11", "SNDK":"SNDK", "BA":"BA",
-  "META":"META", "GOOGL":"GOOGL", "NFLX":"NFLX", "INTC":"INTC", "BABA":"BABA"
+  "META":"META", "GOOGL":"GOOGL", "NFLX":"NFLX", "INTC":"INTC", "BABA":"BABA",
+  "MU":"MU"
 }
 
 s = requests.Session()
@@ -30,6 +31,17 @@ def fmt(p, c):
     arrow = "🟢" if c >= 0 else "🔴"
     return f"${p:8.2f} {arrow} {c:+6.2f}%"
 
+def check_memory_divergence(vals):
+    mu_p, mu_c = vals.get("MU", (0, 0))
+    sndk_p, sndk_c = vals.get("SNDK", (0, 0))
+    
+    if mu_c is not None and sndk_c is not None:
+        if mu_c >= 0 and sndk_c < 0:
+            return "🟢 MEMORY DIVERGENCE ACTIVE (HBM Bid / NAND Purge) -> LONG NQ REINFORCED"
+        elif mu_c < 0 and sndk_c < 0:
+            return "🔴 MEMORY CAPITULATION (Sector Selloff) -> HARD_FREEZE ENFORCED"
+    return "🟡 MEMORY SECTOR NEUTRAL / CONSOLIDATION"
+
 def render():
     now = datetime.now().strftime("%d/%m/%Y %H:%M VET")
     vals = {}
@@ -39,8 +51,8 @@ def render():
     spx_p, spx_c = vals.get("SPX", (7730.50, -0.25))
     dxy_p, dxy_c = vals.get("DXY", (99.97, 0.3))
     vix_p, _ = vals.get("VIX", (15.41, 0))
+    mem_flag = check_memory_divergence(vals)
 
-    # Definir listas estáticas/dinámicas de líderes (ejemplo de fallback institucional)
     bulls = [
         ("SOUN", vals.get("SOUN", (7.15, 11.2))),
         ("ELF", vals.get("ELF", (94.58, 9.5))),
@@ -68,13 +80,14 @@ def render():
     ]
 
     os.system("clear")
-    print(f"""🏛️ MOLINA HOLDINGS — INSTITUTIONAL MATRIX v5.3.1 [TOP 10 EXPANDED]
+    print(f"""🏛️ MOLINA HOLDINGS — INSTITUTIONAL MATRIX v5.3.2 [TOP 10 + MEMORY FLAG]
 ⏱️ {now} | 🌙 POST-MARKET & ASIA STANDBY (300s)
 🏛️ POLICY: FED RATE 5.25% │ CPI YoY 3.0% │ QT PACING: $60B/MO
 🇺🇸 WALL STREET US CORE BENCHMARKS & LIQUIDITY STRUCTURE:
    • SPX: {spx_p:.2f} │ NVDA: {fmt(*vals['NVDA'])} │ AAPL: {fmt(*vals['AAPL'])}
    • MSFT: {fmt(*vals['MSFT'])} │ SPY FLOW: {fmt(*vals['SPY'])} │ DXY: {dxy_p:.2f} ({dxy_c:+.2f}%)
 🌐 MACRO: DXY {dxy_p:.2f} │ VIX {vix_p:.2f} │ US10Y 4.67% [STATIC]
+🧠 MEMORY SECTOR: {mem_flag}
 ────────────────────────────────────────────────────
 🐋 WHALE SPIKE: KOSPI 564K in 3m (518.6x AVG) 🟢 ACCUMULATION
 ════════════════════════════════════════════════════
@@ -84,13 +97,13 @@ def render():
         print(f"{sym:<13} │ {fmt(p, c)} │")
 
     print("""════════════════════════════════════════════════════
-🟥 TOP 10 BEARISH LEADERS (65 RED)
+hk TOP 10 BEARISH LEADERS (65 RED)
 ────────────────────────────────────────────────────""")
     for sym, (p, c) in bears:
         print(f"{sym:<13} │ {fmt(p, c)} │")
 
     print("""════════════════════════════════════════════════════
-M82 TERMINAL ENGINE • v5.3.1 LIVE | Daemons 6/6
+M82 TERMINAL ENGINE • v5.3.2 LIVE | Daemons 6/6
 """)
 
 if __name__ == "__main__":
@@ -100,19 +113,3 @@ if __name__ == "__main__":
             time.sleep(15)
         except KeyboardInterrupt:
             sys.exit(0)
-
-def check_memory_divergence(vals):
-    """
-    Evaluador de Divergencia del Sector Memoria (HBM vs NAND)
-    CASE 1: MU >= 0 & (SNDK < 0 or WDC < 0) -> MEMORY DIVERGENCE ACTIVE (LONG NQ BIAS)
-    CASE 2: MU < 0 & SNDK < 0 -> MEMORY CAPITULATION (HARD_FREEZE TRIGGER)
-    """
-    mu_p, mu_c = vals.get("MU", (0, 0))
-    sndk_p, sndk_c = vals.get("SNDK", (0, 0))
-    
-    if mu_c >= 0 and sndk_c < 0:
-        return "🟢 MEMORY DIVERGENCE ACTIVE (HBM Bid / NAND Purge) -> LONG NQ REINFORCED"
-    elif mu_c < 0 and sndk_c < 0:
-        return "🔴 MEMORY CAPITULATION (Sector Selloff) -> HARD_FREEZE ENFORCED"
-    else:
-        return "🟡 MEMORY SECTOR NEUTRAL / CONSOLIDATION"
