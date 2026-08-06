@@ -100,3 +100,19 @@ if __name__ == "__main__":
             time.sleep(15)
         except KeyboardInterrupt:
             sys.exit(0)
+
+def check_memory_divergence(vals):
+    """
+    Evaluador de Divergencia del Sector Memoria (HBM vs NAND)
+    CASE 1: MU >= 0 & (SNDK < 0 or WDC < 0) -> MEMORY DIVERGENCE ACTIVE (LONG NQ BIAS)
+    CASE 2: MU < 0 & SNDK < 0 -> MEMORY CAPITULATION (HARD_FREEZE TRIGGER)
+    """
+    mu_p, mu_c = vals.get("MU", (0, 0))
+    sndk_p, sndk_c = vals.get("SNDK", (0, 0))
+    
+    if mu_c >= 0 and sndk_c < 0:
+        return "🟢 MEMORY DIVERGENCE ACTIVE (HBM Bid / NAND Purge) -> LONG NQ REINFORCED"
+    elif mu_c < 0 and sndk_c < 0:
+        return "🔴 MEMORY CAPITULATION (Sector Selloff) -> HARD_FREEZE ENFORCED"
+    else:
+        return "🟡 MEMORY SECTOR NEUTRAL / CONSOLIDATION"
