@@ -61,3 +61,6 @@ def load_market_data(period="1mo"):
         except Exception as e:
             pass
     return data
+# IPOs 4-ago-2026
+IPOS_WATCH = ['FJDIU','PHAXU','THEOU']
+SHORT_SQUEEZE_WATCH = ['WETOUR_R'] # completa el ticker

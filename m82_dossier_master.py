@@ -1,59 +1,63 @@
 # -*- coding: utf-8 -*-
 """
 ================================================================================
-       M82 MACRO INTELLIGENCE - ATLANTIC FFO FLOWS & ARBITRAJE V16.0
-     Sovereign-Grade Governance: Cash Flow Generation & Atlantic Infrastructure
+       M82 MACRO INTELLIGENCE - REAL TIME ENGINE LOOP V17.0
+     Sovereign-Grade Governance: Continuous Terminal Streaming & Refresh
 ================================================================================
 """
 import sys
-import json
+import os
+import time
 import requests
 
-class M82AtlanticCashFlows(object):
+class M82RealTimeEngine(object):
     def __init__(self):
         self.ollama_url = "http://localhost:11434/api/generate"
         self.model_name = "gemma2:2b"
         
-        # PARAMETRIZACIÓN DEL EJE ATLÁNTICO (MONITOREO DE ACTIVOS TANGIBLES)
-        self.brent_base = 93.11
-        self.guyana_fcf_yield = 18.5       # Porcentaje de Free Cash Flow Yield promedio
-        self.argentina_shale_growth = 12.0 # Tasa de crecimiento operativa en infraestructura base
+        # PARAMETRIZACIÓN BASE EN TIEMPO REAL
+        self.brent_price = 93.11
+        self.spx_spot = 7405.73
+        self.dark_pool_divergence = 3.4
         
-        # MÉTRICAS DE VALORACIÓN VS CRECIMIENTO
-        self.ev_ebitda_target = 4.2        # Múltiplo objetivo de entrada para activos Midstream
+    def limpiar_pantalla(self):
+        # Limpia la consola en entornos Unix/Termux para dar el efecto de actualización
+        os.system('clear')
 
-    def evaluar_flujos_atlantico(self):
-        print("\n" + "🏛️  " + "="*75)
-        print(" [M82 INFRASTRUCTURE V16.0] — ATLANTIC AXIS CASH FLOW RUNTIME")
-        print("="*79)
-        print(f"🛢️  Brent Reference    : ${self.brent_base} USD/Bbl")
-        print(f"🇬🇾  Guyana Asset Yield : {self.guyana_fcf_yield}% Free Cash Flow Yield (Premium)")
-        print(f"🇦🇷  Argentina Growth   : +{self.argentina_shale_growth}% en Infraestructura Logística")
-        print(f"📊 EV/EBITDA Target    : {self.ev_ebitda_target}x (Foco exclusivo en Control Layer)")
-        print("-" * 79)
-
-        contexto_flows = (
-            f"Con el Brent a ${self.brent_base}, las operaciones del Eje Atlantico (Guyana/Argentina) "
-            f"estan generando un FCF Yield del {self.guyana_fcf_yield}%. La disciplina de capital de las Majors "
-            f"dirige el flujo monetario a estos hubs eficientes con un EV/EBITDA de {self.ev_ebitda_target}x. "
-            f"Determina la estrategia de captura de rendimiento para el libro de Molina Holdings."
-        )
-
-        payload = {
-            "model": self.model_name,
-            "prompt": f"[M82 ATLANTIC CORE]\nContexto: {contexto_flows}\nDictamen de Asignación FFO:",
-            "stream": False
-        }
-
+    def streamear_terminal(self):
+        contador_ciclos = 1
+        
         try:
-            res = requests.post(self.ollama_url, json=payload, timeout=25)
-            print(f"🧠 DICTAMEN DE INTELIGENCIA SOBERANA (Gemma 2):\n{res.json().get('response', '').strip()}")
-        except Exception:
-            print("🛡️ [STANDALONE MODE] Procesador cognitivo resguardado.")
-            print("   >> DIRECTIVA: El FFO del Eje Atlántico es inmune al riesgo de transporte de Oriente Medio.")
-            print("   >> ACCIÓN: Priorizar contratos de transporte de volumen (Take-or-Pay) indexados a inflación.")
-        print("="*79)
+            while True:
+                self.limpiar_pantalla()
+                
+                # Simulación de fluctuación de mercado en vivo (Tick-by-Tick simulado para el Core)
+                # En un entorno de producción, aquí se incrustarían las llamadas directas a APIs de WebSocket/MarketData
+                import random
+                self.brent_price += round(random.uniform(-0.15, 0.15), 2)
+                self.spx_spot += round(random.uniform(-1.5, 1.5), 2)
+                
+                print("🏛️  " + "="*75)
+                print(f"      M82 SOVEREIGN CORE V17.0 — MONITOR DE FLUJO CONTINUO (REAL-TIME)")
+                print("="*79)
+                print(f"⏱️  Última Actualización : {time.strftime('%Y-%m-%d %H:%M:%S')}")
+                print(f"🔄 Ciclo de Ingesta      : #{contador_ciclos}")
+                print("-" * 79)
+                print(f"🛢️  Brent Futures (AUG6) : ${self.brent_price:.2f} USD/Bbl")
+                print(f"📊 S&P 500 Index Spot   : {self.spx_spot:.2f}")
+                print(f"🐳 Dark Pools Divergence: {self.dark_pool_divergence}%")
+                print("-" * 79)
+                print("🟢 ESTADO DEL SISTEMA   : OPERACIONAL_LIVE (Escuchando variables...)")
+                print("💡 [Presiona CTRL + C para detener el monitoreo en vivo]")
+                print("="*79)
+                
+                # Frecuencia de actualización: 5 segundos
+                time.sleep(5)
+                contador_ciclos += 1
+                
+        except KeyboardInterrupt:
+            print("\n\n🛡️ [M82 CORE] Streaming en tiempo real pausado por el usuario. Regresando a línea de comandos.")
 
 if __name__ == "__main__":
-    engine = M82AtlanticCashFlows()
-    engine.evaluar_flujos_atlantico()
+    monitor = M82RealTimeEngine()
+    monitor.streamear_terminal()

@@ -1,0 +1,19 @@
+M82 ALERT 1: PLTR $151.03 BREAKOUT sync WTI $76.09 @MolinaHoldings #M82
+M82 ALERT 2: PLTR $151.03 BREAKOUT sync WTI $76.09 @MolinaHoldings #M82
+M82 ALERT 3: PLTR $151.03 BREAKOUT sync WTI $76.09 @MolinaHoldings #M82
+[2026-08-04 10:25 ET] M82 BREAKOUT CONFIRMED: PLTR $156.97 > $151.03 Otherworldly intacto | WTI $75.96 support | @MolinaHoldings #M82 #PLTR
+M82 BREAKOUT: PLTR $156.97 > $151.03 Otherworldly intacto | WTI $75.96 | 10:25ET @MolinaHoldings $PLTR #M82
+---
+[2026-08-04 10:30 VET] FLOW ANALYSIS
+PLTR $156.97 BREAKOUT = VALIDADO por MSFT rally + S&P ATH
+WTI $75.96 = RIESGO breakdown a $74 si deal Iran confirma
+OXY 100.5K block @54.58 = EXIT energia
+FLOW WINNER = TECH/AI - MSFT best 3-day rally
+OXY/Oil bear, PLTR/MSFT bull
+---
+[2026-08-04 10:40 VET] OIL DESPRESURIZACION
+Qatar confirma borrador US-Iran Hormuz
+WTI $76.44 -4.85% low $75.96 | Brent $80.25 -4.20% break $80 low $79.86
+OXY Block 100.5K @54.58 = institucional anticipó
+PLTR $156.97 BREAKOUT validado | Oro $4142 +1.3% | Bitdeer $4.7B data center
+Riesgo $74 vigilado por m82_crude_guard.py

@@ -1,0 +1,16 @@
+nohup: ignoring input
+'latin-1' codec can't encode character '\U0001f680' in position 19: ordinal not in range(256)
+'latin-1' codec can't encode character '\U0001f680' in position 0: ordinal not in range(256)
+'latin-1' codec can't encode character '\U0001f48e' in position 0: ordinal not in range(256)
+'latin-1' codec can't encode character '\U0001f48e' in position 0: ordinal not in range(256)
+'latin-1' codec can't encode character '\U0001f48e' in position 0: ordinal not in range(256)
+[13:47:25] MERCADO SPY +1.97%
+[13:47:26] MERCADO QQQ +3.42%
+[13:47:27] MERCADO DIA +2.00%
+[13:47:29] SECTOR XLK +5.28%
+[13:47:30] SECTOR XLF +1.08%
+[13:47:33] CHIPS SMH +5.86%
+[13:47:36] ENERGY XOP -1.23%
+[13:47:37] ORO GLD +1.06%
+[13:47:38] PLATA SLV +3.18%
+[13:47:39] ENERGY USO -5.44%

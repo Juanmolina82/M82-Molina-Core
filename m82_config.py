@@ -1,0 +1,10 @@
+# M82 INSTITUTIONAL CONFIGURATION & TRIGGER THRESHOLDS
+CONFIG = {
+    "NQ_DYNAMIC_SUPPORT": 29500.00,
+    "NQ_TARGET_RECOVERY": 29600.00,
+    "GOLD_MOMENTUM_CEILING": 0.80, # Max % GC 3m momentum allowed
+    "KOSPI_UNWIND_RECOVERY_KORU": 18.10, # KORU ETF threshold to call Asia contagion dead
+    "US_AI_COMPUTE_SOXL_LEADER": 139.50, # SOXL ETF threshold for full risk-on unlock
+    "WHALE_RATIO_REQ": 3.0,
+    "CONFIRMATIONS_REQ": 3
+}

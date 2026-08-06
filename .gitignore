@@ -1,9 +1,4 @@
-.env
-*.log
+logs/
+.env_m82
 __pycache__/
-instance/
-*.db
-nohup.out
-.env
-core/__pycache__/
-M82-Command/__pycache__/
+*.pdf
