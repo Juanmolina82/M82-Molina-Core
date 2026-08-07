@@ -1,6 +1,18 @@
 import time, os, sys, requests
 from datetime import datetime
 
+# -------------------------------------------------------------------
+# MATRIX CORE 5.3.3 — PORTFOLIO DEFINITION WITH SPLIT REBASE
+# -------------------------------------------------------------------
+PORTFOLIO = {
+    "NVDA": {"entry": 228.50,  "sl": 217.07,  "tp": 251.35, "legacy_entry": 240.89},
+    "AVGO": {"entry": 1680.00, "sl": 1596.00, "tp": 1848.00, "legacy_entry": 462.63},
+    "MU":   {"entry": 881.47,  "sl": 837.40,  "tp": 969.62, "legacy_entry": 881.47},
+    "ARM":  {"entry": 301.01,  "sl": 285.96,  "tp": 331.11, "legacy_entry": 301.01},
+    "VRT":  {"entry": 288.93,  "sl": 274.48,  "tp": 317.82, "legacy_entry": 288.93},
+    "SQQQ": {"entry": 42.57,   "sl": 0.00,    "tp": 0.00,   "legacy_entry": 42.57}
+}
+
 WATCH = {
   "SPX":"^GSPC", "NVDA":"NVDA", "AAPL":"AAPL", "MSFT":"MSFT", "SPY":"SPY",
   "DXY":"DX-Y.NYB", "VIX":"^VIX", "ES":"ES=F", "NQ":"NQ=F", "YM":"YM=F",
@@ -12,7 +24,7 @@ WATCH = {
 }
 
 s = requests.Session()
-s.headers.update({"User-Agent":"M82-Molina-Core/5.3"})
+s.headers.update({"User-Agent":"M82-Molina-Core/5.3.3"})
 
 def get(sym):
     try:
@@ -26,10 +38,24 @@ def get(sym):
     except Exception:
         return None, None
 
-def fmt(p, c):
-    if p is None: return "N/A"
-    arrow = "🟢" if c >= 0 else "🔴"
-    return f"${p:8.2f} {arrow} {c:+6.2f}%"
+def evaluate_position(ticker, current_price):
+    if ticker not in PORTFOLIO or current_price is None or current_price == 0:
+        return "UNKNOWN", 0.0, "⚪ NO DATA"
+    
+    pos = PORTFOLIO[ticker]
+    entry = pos["entry"]
+    sl = pos["sl"]
+    
+    pnl_pct = ((current_price - entry) / entry) * 100.0
+    
+    if sl > 0 and current_price <= sl:
+        status = f"🔴 CRITICAL SL BREACH ({pnl_pct:+.2f}%) -> AUTO SELL"
+    elif current_price < entry:
+        status = f"⚠️ UNDER PRESSURE ({pnl_pct:+.2f}%) -> MONITORING"
+    else:
+        status = f"🟢 PROFITABLE ({pnl_pct:+.2f}%) -> HOLDING"
+        
+    return status, pnl_pct, f"${current_price:8.2f}"
 
 def check_memory_divergence(vals):
     mu_p, mu_c = vals.get("MU", (0, 0))
@@ -53,57 +79,22 @@ def render():
     vix_p, _ = vals.get("VIX", (15.41, 0))
     mem_flag = check_memory_divergence(vals)
 
-    bulls = [
-        ("SOUN", vals.get("SOUN", (7.15, 11.2))),
-        ("ELF", vals.get("ELF", (94.58, 9.5))),
-        ("ARM", vals.get("ARM", (288.45, 5.0))),
-        ("OIL_SERVICES", vals.get("XLE", (395.24, 2.6))),
-        ("AMD", vals.get("AMD", (493.90, 2.5))),
-        ("PLTR", vals.get("PLTR", (112.40, 2.3))),
-        ("TSLA", vals.get("TSLA", (310.15, 2.1))),
-        ("SMCI", vals.get("SMCI", (845.20, 1.9))),
-        ("AVGO", vals.get("AVGO", (1720.10, 1.7))),
-        ("AMZN", vals.get("AMZN", (225.80, 1.4)))
-    ]
-
-    bears = [
-        ("FIG", vals.get("FIG", (24.11, -14.4))),
-        ("AXON", vals.get("AXON", (529.13, -13.2))),
-        ("KOSPI", vals.get("KOSPI", (6296.38, -4.6))),
-        ("SNDK", vals.get("SNDK", (1290.50, -4.4))),
-        ("BOEING", vals.get("BA", (231.92, -3.4))),
-        ("META", vals.get("META", (680.10, -2.8))),
-        ("GOOGL", vals.get("GOOGL", (185.30, -2.4))),
-        ("NFLX", vals.get("NFLX", (710.20, -2.1))),
-        ("INTC", vals.get("INTC", (21.40, -1.9))),
-        ("BABA", vals.get("BABA", (82.10, -1.6)))
-    ]
-
     os.system("clear")
-    print(f"""🏛️ MOLINA HOLDINGS — INSTITUTIONAL MATRIX v5.3.2 [TOP 10 + MEMORY FLAG]
-⏱️ {now} | 🌙 POST-MARKET & ASIA STANDBY (300s)
+    print(f"""===================================================================
+ 🏛️ MOLINA HOLDINGS — INSTITUTIONAL MATRIX v5.3.3 [SPLIT REBASED]
+⏱️ {now} | 🌙 POST-MARKET & ASIA STANDBY (15s Loop)
 🏛️ POLICY: FED RATE 5.25% │ CPI YoY 3.0% │ QT PACING: $60B/MO
-🇺🇸 WALL STREET US CORE BENCHMARKS & LIQUIDITY STRUCTURE:
-   • SPX: {spx_p:.2f} │ NVDA: {fmt(*vals['NVDA'])} │ AAPL: {fmt(*vals['AAPL'])}
-   • MSFT: {fmt(*vals['MSFT'])} │ SPY FLOW: {fmt(*vals['SPY'])} │ DXY: {dxy_p:.2f} ({dxy_c:+.2f}%)
-🌐 MACRO: DXY {dxy_p:.2f} │ VIX {vix_p:.2f} │ US10Y 4.67% [STATIC]
 🧠 MEMORY SECTOR: {mem_flag}
 ────────────────────────────────────────────────────
-🐋 WHALE SPIKE: KOSPI 564K in 3m (518.6x AVG) 🟢 ACCUMULATION
-════════════════════════════════════════════════════
-🟩 TOP 10 BULLISH LEADERS (41 GREEN)
-────────────────────────────────────────────────────""")
-    for sym, (p, c) in bulls:
-        print(f"{sym:<13} │ {fmt(p, c)} │")
+🛡️ PORTFOLIO REBASED AUDIT & GUARDRAILS:""")
+
+    for t in ["NVDA", "AVGO", "MU", "ARM", "VRT"]:
+        price, _ = vals.get(t, (0, 0))
+        status, pnl, p_fmt = evaluate_position(t, price)
+        print(f" • {t:<5} │ SPOT: {p_fmt} │ ENTRY: ${PORTFOLIO[t]['entry']:<7.2f} │ SL: ${PORTFOLIO[t]['sl']:<7.2f} │ {status}")
 
     print("""════════════════════════════════════════════════════
-hk TOP 10 BEARISH LEADERS (65 RED)
-────────────────────────────────────────────────────""")
-    for sym, (p, c) in bears:
-        print(f"{sym:<13} │ {fmt(p, c)} │")
-
-    print("""════════════════════════════════════════════════════
-M82 TERMINAL ENGINE • v5.3.2 LIVE | Daemons 6/6
+M82 TERMINAL ENGINE • v5.3.3 LIVE | Daemons 6/6
 """)
 
 if __name__ == "__main__":
